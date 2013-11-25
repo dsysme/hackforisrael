@@ -4,7 +4,9 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.db.models import Count
 from lms import models
+import users.models as users_models
 
 
 class TrailListView(ListView):
@@ -57,3 +59,13 @@ class LMSItemDetailView(DetailView):
             ui.save()
 
         return redirect(o)
+
+
+class LMSUserListView(ListView):
+    model = users_models.HackitaUser
+
+    def get_queryset(self):
+        all_users = super(LMSUserListView, self).get_queryset()
+        #TODO: check for is_staff ?
+        users = all_users.annotate(num_solutions=Count('solutions')).filter(num_solutions__gt=0)
+        return users.order_by('num_solutions')

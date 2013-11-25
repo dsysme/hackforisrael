@@ -7,5 +7,6 @@ urlpatterns = patterns('',
         name='trail'),
     url(r'^item/(?P<pk>\d+)/$', views.LMSItemDetailView.as_view(),
         name='lms_item'),
-
+    url(r'^users/$', views.LMSUserListView.as_view(),
+        name='lms_users'),
 )
